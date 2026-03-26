@@ -2,11 +2,6 @@
 
 **MicroInsurancePool** - Decentralized Community-Governed Insurance on Stellar Blockchain
 
-![Stellar](https://badgen.net/badge/Built%20on/Stellar/purple)
-![Soroban](https://badgen.net/badge/Soroban/SDK%20v25/cyan)
-![Rust](https://badgen.net/badge/Language/Rust/orange)
-![License](https://badgen.net/badge/License/MIT/green)
-
 ---
 
 ## Project Description
