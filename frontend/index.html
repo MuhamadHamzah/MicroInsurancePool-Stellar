@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MicroInsurancePool — Decentralized Insurance on Stellar</title>
+    <meta name="description" content="A decentralized micro-insurance pool on Stellar blockchain. Join, file claims, vote, and receive payouts — all governed by smart contracts.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0b14;
+            --bg-secondary: #12132a;
+            --bg-card: #181a36;
+            --bg-card-hover: #1e2048;
+            --border: #2a2d5a;
+            --accent: #6c5ce7;
+            --accent-glow: rgba(108, 92, 231, 0.3);
+            --accent-light: #a29bfe;
+            --success: #00cec9;
+            --success-glow: rgba(0, 206, 201, 0.2);
+            --danger: #ff6b6b;
+            --danger-glow: rgba(255, 107, 107, 0.2);
+            --warning: #feca57;
+            --text-primary: #e8e8f0;
+            --text-secondary: #9a9ab8;
+            --text-muted: #6b6b8a;
+            --gradient-1: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            --gradient-2: linear-gradient(135deg, #00cec9, #55efc4);
+            --gradient-3: linear-gradient(135deg, #fd79a8, #e84393);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(108, 92, 231, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 206, 201, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(253, 121, 168, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header */
+        .header {
+            position: relative;
+            z-index: 1;
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            background: rgba(10, 11, 20, 0.8);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .network-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 100px;
+            background: rgba(0, 206, 201, 0.1);
+            border: 1px solid rgba(0, 206, 201, 0.3);
+            font-size: 13px;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .network-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 80px 40px 40px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #e8e8f0, #a29bfe, #00cec9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        /* Stats */
+        .stats-row {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 0 40px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 32px var(--accent-glow);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-value.accent { color: var(--accent-light); }
+        .stat-value.success { color: var(--success); }
+        .stat-value.danger { color: var(--danger); }
+        .stat-value.warning { color: var(--warning); }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        /* Main grid */
+        .main-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding: 0 40px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(108, 92, 231, 0.4);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .card-icon.join { background: rgba(108, 92, 231, 0.15); }
+        .card-icon.claim { background: rgba(253, 121, 168, 0.15); }
+        .card-icon.vote { background: rgba(0, 206, 201, 0.15); }
+        .card-icon.execute { background: rgba(254, 202, 87, 0.15); }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--accent-glow);
+        }
+
+        .btn-success {
+            background: var(--gradient-2);
+            color: #0a0b14;
+            box-shadow: 0 4px 15px var(--success-glow);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--success-glow);
+        }
+
+        .btn-danger {
+            background: var(--gradient-3);
+            color: white;
+            box-shadow: 0 4px 15px var(--danger-glow);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--danger-glow);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        .btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* Claims list */
+        .claims-section {
+            position: relative;
+            z-index: 1;
+            padding: 0 40px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .claim-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .claim-item:hover {
+            border-color: rgba(108, 92, 231, 0.4);
+        }
+
+        .claim-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .claim-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .claim-info p {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .claim-meta {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .badge {
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-pending {
+            background: rgba(254, 202, 87, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(254, 202, 87, 0.3);
+        }
+
+        .badge-approved {
+            background: rgba(0, 206, 201, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(0, 206, 201, 0.3);
+        }
+
+        .badge-rejected {
+            background: rgba(255, 107, 107, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .badge-executed {
+            background: rgba(108, 92, 231, 0.15);
+            color: var(--accent-light);
+            border: 1px solid rgba(108, 92, 231, 0.3);
+        }
+
+        .vote-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .vote-bar-track {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 107, 107, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .vote-bar-fill {
+            height: 100%;
+            background: var(--gradient-2);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .vote-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        /* Toast notification */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            backdrop-filter: blur(20px);
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+            max-width: 400px;
+        }
+
+        .toast-success {
+            background: rgba(0, 206, 201, 0.2);
+            border: 1px solid rgba(0, 206, 201, 0.4);
+            color: var(--success);
+        }
+
+        .toast-error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.4);
+            color: var(--danger);
+        }
+
+        .toast-info {
+            background: rgba(108, 92, 231, 0.2);
+            border: 1px solid rgba(108, 92, 231, 0.4);
+            color: var(--accent-light);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        /* Footer */
+        .footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .footer a {
+            color: var(--accent-light);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header { padding: 16px 20px; }
+            .hero { padding: 40px 20px 20px; }
+            .hero h1 { font-size: 32px; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); padding: 0 20px 20px; }
+            .main-grid { grid-template-columns: 1fr; padding: 0 20px 40px; }
+            .claims-section { padding: 0 20px 40px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">🛡️</div>
+            <span class="logo-text">MicroInsurancePool</span>
+        </div>
+        <div class="network-badge">Stellar Testnet</div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Decentralized Insurance Pool</h1>
+        <p>Pay small premiums, vote on claims, receive payouts — all governed by Soroban smart contracts on Stellar. No middleman, no company.</p>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats-row">
+        <div class="stat-card">
+            <div class="stat-value accent" id="stat-pool">0 XLM</div>
+            <div class="stat-label">Pool Balance</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value success" id="stat-members">0</div>
+            <div class="stat-label">Members</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value warning" id="stat-claims">0</div>
+            <div class="stat-label">Total Claims</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value danger" id="stat-reputation">—</div>
+            <div class="stat-label">Your Reputation</div>
+        </div>
+    </section>
+
+    <!-- Action Cards -->
+    <section class="main-grid">
+        <!-- Join Pool -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon join">🤝</div>
+                <div>
+                    <div class="card-title">Join Pool</div>
+                    <div class="card-desc">Register and pay premium to join the insurance pool</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="join-address">Your Wallet Address</label>
+                <input type="text" id="join-address" placeholder="G...">
+            </div>
+            <div class="form-group">
+                <label for="join-premium">Premium Amount (stroops)</label>
+                <input type="number" id="join-premium" placeholder="10000000" min="1">
+            </div>
+            <button class="btn btn-primary" onclick="joinPool()">
+                🛡️ Join Pool
+            </button>
+        </div>
+
+        <!-- File Claim -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon claim">📋</div>
+                <div>
+                    <div class="card-title">File Claim</div>
+                    <div class="card-desc">Submit an insurance claim for community voting</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="claim-address">Your Wallet Address</label>
+                <input type="text" id="claim-address" placeholder="G...">
+            </div>
+            <div class="form-group">
+                <label for="claim-amount">Claim Amount (stroops)</label>
+                <input type="number" id="claim-amount" placeholder="5000000" min="1">
+            </div>
+            <div class="form-group">
+                <label for="claim-reason">Reason</label>
+                <textarea id="claim-reason" placeholder="Describe why you're filing this claim..."></textarea>
+            </div>
+            <button class="btn btn-danger" onclick="fileClaim()">
+                📋 File Claim
+            </button>
+        </div>
+
+        <!-- Vote on Claim -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon vote">🗳️</div>
+                <div>
+                    <div class="card-title">Vote on Claim</div>
+                    <div class="card-desc">Cast your vote to approve or reject a pending claim</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="vote-address">Your Wallet Address</label>
+                <input type="text" id="vote-address" placeholder="G...">
+            </div>
+            <div class="form-group">
+                <label for="vote-claim-id">Claim ID</label>
+                <input type="number" id="vote-claim-id" placeholder="0" min="0">
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-success" onclick="voteClaim(true)">
+                    ✅ Approve
+                </button>
+                <button class="btn btn-danger" onclick="voteClaim(false)">
+                    ❌ Reject
+                </button>
+            </div>
+        </div>
+
+        <!-- Execute Claim -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon execute">⚡</div>
+                <div>
+                    <div class="card-title">Execute Claim</div>
+                    <div class="card-desc">Finalize a claim after the voting period ends</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="exec-claim-id">Claim ID</label>
+                <input type="number" id="exec-claim-id" placeholder="0" min="0">
+            </div>
+            <button class="btn btn-primary" onclick="executeClaim()" style="margin-top: 8px;">
+                ⚡ Execute Claim
+            </button>
+            <div style="margin-top: 16px; padding: 16px; border-radius: 12px; background: var(--bg-secondary); border: 1px solid var(--border);">
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">GOVERNANCE RULES</div>
+                <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                    • Voting deadline must pass before execution<br>
+                    • Minimum 50% quorum of eligible voters<br>
+                    • Claimants cannot vote on their own claims<br>
+                    • Majority (>50%) determines outcome
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Claims List -->
+    <section class="claims-section">
+        <div class="section-header">
+            <span style="font-size: 24px;">📜</span>
+            <div class="section-title">Recent Claims</div>
+        </div>
+        <div id="claims-list">
+            <!-- Demo claims for presentation -->
+            <div class="claim-item">
+                <div class="claim-row">
+                    <div class="claim-info">
+                        <h3>Claim #0 — Medical Emergency</h3>
+                        <p>Filed by G...X4KN • Amount: 3,000 XLM • Deadline: 2026-03-27 23:00</p>
+                    </div>
+                    <div class="claim-meta">
+                        <span class="badge badge-pending">⏳ Pending</span>
+                    </div>
+                </div>
+                <div class="vote-bar">
+                    <span class="vote-label">2 Approve</span>
+                    <div class="vote-bar-track">
+                        <div class="vote-bar-fill" style="width: 100%"></div>
+                    </div>
+                    <span class="vote-label">0 Reject</span>
+                </div>
+            </div>
+
+            <div class="claim-item">
+                <div class="claim-row">
+                    <div class="claim-info">
+                        <h3>Claim #1 — Property Damage</h3>
+                        <p>Filed by G...B7QM • Amount: 5,000 XLM • Deadline: 2026-03-27 18:30</p>
+                    </div>
+                    <div class="claim-meta">
+                        <span class="badge badge-executed">✓ Executed</span>
+                    </div>
+                </div>
+                <div class="vote-bar">
+                    <span class="vote-label">3 Approve</span>
+                    <div class="vote-bar-track">
+                        <div class="vote-bar-fill" style="width: 75%"></div>
+                    </div>
+                    <span class="vote-label">1 Reject</span>
+                </div>
+            </div>
+
+            <div class="claim-item">
+                <div class="claim-row">
+                    <div class="claim-info">
+                        <h3>Claim #2 — Suspicious Activity</h3>
+                        <p>Filed by G...R1WP • Amount: 8,000 XLM • Deadline: 2026-03-26 12:00</p>
+                    </div>
+                    <div class="claim-meta">
+                        <span class="badge badge-rejected">✗ Rejected</span>
+                    </div>
+                </div>
+                <div class="vote-bar">
+                    <span class="vote-label">1 Approve</span>
+                    <div class="vote-bar-track">
+                        <div class="vote-bar-fill" style="width: 25%"></div>
+                    </div>
+                    <span class="vote-label">3 Reject</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>
+            Built with 🛡️ on <a href="https://stellar.org" target="_blank">Stellar</a> using
+            <a href="https://soroban.stellar.org" target="_blank">Soroban Smart Contracts</a>
+        </p>
+        <p style="margin-top: 8px;">MicroInsurancePool — Decentralized Insurance for Everyone</p>
+    </footer>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        // =====================================================================
+        // MicroInsurancePool Frontend
+        // =====================================================================
+        // This frontend demonstrates the contract UI.
+        // For production, connect via @stellar/stellar-sdk and Freighter wallet.
+        //
+        // Contract ID: Replace with your deployed contract ID
+        const CONTRACT_ID = 'YOUR_CONTRACT_ID_HERE';
+        const NETWORK = 'TESTNET';
+        const RPC_URL = 'https://soroban-testnet.stellar.org:443';
+
+        // Toast notification system
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Simulated contract interactions
+        // In production, these would use @stellar/stellar-sdk to build and submit transactions
+
+        function joinPool() {
+            const address = document.getElementById('join-address').value;
+            const premium = document.getElementById('join-premium').value;
+
+            if (!address || !premium) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (!address.startsWith('G') || address.length !== 56) {
+                showToast('Invalid Stellar address format', 'error');
+                return;
+            }
+
+            showToast(`Joining pool with premium of ${premium} stroops...`, 'info');
+
+            // Simulated: In production, build and submit Soroban transaction
+            // const contract = new SorobanClient.Contract(CONTRACT_ID);
+            // const tx = new SorobanClient.TransactionBuilder(account, { fee: '100' })
+            //   .addOperation(contract.call('join_pool', address, premium))
+            //   .build();
+
+            setTimeout(() => {
+                showToast('Successfully joined the insurance pool! 🛡️', 'success');
+                updateStats();
+            }, 1500);
+        }
+
+        function fileClaim() {
+            const address = document.getElementById('claim-address').value;
+            const amount = document.getElementById('claim-amount').value;
+            const reason = document.getElementById('claim-reason').value;
+
+            if (!address || !amount || !reason) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            showToast(`Filing claim for ${amount} stroops...`, 'info');
+
+            setTimeout(() => {
+                showToast('Claim filed successfully! Voting is now open. 📋', 'success');
+                updateStats();
+            }, 1500);
+        }
+
+        function voteClaim(approve) {
+            const address = document.getElementById('vote-address').value;
+            const claimId = document.getElementById('vote-claim-id').value;
+
+            if (!address || claimId === '') {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            const action = approve ? 'Approving' : 'Rejecting';
+            showToast(`${action} claim #${claimId}...`, 'info');
+
+            setTimeout(() => {
+                const result = approve ? 'approved ✅' : 'rejected ❌';
+                showToast(`Vote recorded: Claim #${claimId} ${result}`, 'success');
+            }, 1500);
+        }
+
+        function executeClaim() {
+            const claimId = document.getElementById('exec-claim-id').value;
+
+            if (claimId === '') {
+                showToast('Please enter a claim ID', 'error');
+                return;
+            }
+
+            showToast(`Executing claim #${claimId}...`, 'info');
+
+            setTimeout(() => {
+                showToast(`Claim #${claimId} executed successfully! ⚡`, 'success');
+                updateStats();
+            }, 1500);
+        }
+
+        // Simulated stats update
+        function updateStats() {
+            // In production, these would call get_pool_balance, get_member_count, etc.
+            const pool = document.getElementById('stat-pool');
+            const members = document.getElementById('stat-members');
+            const claims = document.getElementById('stat-claims');
+            const rep = document.getElementById('stat-reputation');
+
+            // Animate counts
+            animateValue(pool, '15,000 XLM');
+            animateValue(members, '3');
+            animateValue(claims, '3');
+            animateValue(rep, '100');
+        }
+
+        function animateValue(el, target) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                el.textContent = target;
+                el.style.transition = 'all 0.4s ease';
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }, 200);
+        }
+
+        // Initialize demo stats on load
+        window.addEventListener('load', () => {
+            setTimeout(updateStats, 500);
+        });
+    </script>
+</body>
+</html>

@@ -1,118 +1,166 @@
-# Stellar Notes DApp
+# 🛡️ MicroInsurancePool
 
-**Stellar Notes DApp** - Blockchain-Based Decentralized Note-Taking System
+**MicroInsurancePool** - Decentralized Community-Governed Insurance on Stellar Blockchain
+
+[![Stellar](https://img.shields.io/badge/Built%20on-Stellar-7B68EE?style=flat-square&logo=stellar)](https://stellar.org)
+[![Soroban](https://img.shields.io/badge/Soroban-SDK%20v25-00CEC9?style=flat-square)](https://soroban.stellar.org)
+[![Rust](https://img.shields.io/badge/Language-Rust-orange?style=flat-square&logo=rust)](https://www.rust-lang.org)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+
+---
 
 ## Project Description
 
-Stellar Notes DApp is a decentralized smart contract solution built on the Stellar blockchain using Soroban SDK. It provides a secure, immutable platform for managing personal notes directly on the blockchain. The contract ensures that your data is stored transparently and is only manageable through predefined smart contract functions, eliminating reliance on centralized database providers.
+MicroInsurancePool is a fully decentralized insurance protocol built on the Stellar blockchain using the Soroban Smart Contract SDK. It enables communities to create self-governed insurance pools where members collectively pay premiums, file claims, and vote on each other's payouts — without any company, broker, or middleman involved.
 
-The system allows users to create, view, and delete notes, leveraging the efficiency and security of the Stellar network. Each note is uniquely identified and stored within the contract's instance storage, ensuring data persistence and reliability.
+The protocol leverages the Stellar Asset Contract (SAC) standard to ensure that every premium payment and claim payout involves real, verifiable token transfers on-chain. Governance is enforced entirely by smart contract logic: voting deadlines are anchored to the ledger timestamp, quorum requirements prevent manipulation by low participation, and built-in conflict-of-interest guards stop claimants from influencing their own outcomes.
+
+By combining blockchain immutability with community governance, MicroInsurancePool brings transparent, trustless, and accessible insurance to anyone with a Stellar wallet.
+
+---
 
 ## Project Vision
 
-Our vision is to revolutionize personal productivity in the digital age by:
+Our vision is to democratize financial protection by removing institutional barriers from insurance:
 
-- **Decentralizing Data**: Moving note-taking from centralized servers to a global, distributed blockchain
-- **Ensuring Ownership**: Empowering users to have complete control and ownership over their digital thoughts and information
-- **Guaranteeing Immutability**: Providing a permanent, tamper-proof record of notes that cannot be altered or deleted by third parties
-- **Enhancing Privacy**: Leveraging blockchain security to protect personal information from unauthorized access
-- **Building Trustless Systems**: Creating a platform where data integrity is guaranteed by code, not by company promises
+- **Eliminating Middlemen**: Traditional insurance relies on opaque companies with high overhead costs. MicroInsurancePool puts governance directly in the hands of members, reducing premiums and increasing trust.
+- **Enabling Financial Inclusion**: Low-cost micro-premiums on Stellar make insurance accessible to underserved communities that lack access to traditional financial services.
+- **Guaranteeing Transparency**: Every claim, every vote, and every payout is recorded immutably on the Stellar blockchain — fully auditable by anyone at any time.
+- **Enforcing Fairness by Code**: Smart contract rules — quorum, deadlines, self-vote prevention — ensure that no single member can game the system, regardless of their influence or wealth.
+- **Building Trustless Cooperation**: Members don't need to trust each other personally. They trust the code. The contract enforces the rules impartially and automatically.
 
-We envision a future where digital information is truly personal and sovereign, empowering individuals with complete autonomy over their digital assets.
+We envision a future where communities worldwide can form their own insurance pools in minutes, protecting each other against medical emergencies, natural disasters, property damage, and beyond.
+
+---
 
 ## Key Features
 
-### 1. **Simple Note Creation**
+### 1. **Real Token Transfers via Stellar Asset Contract (SAC)**
 
-- Create notes with just one function call
-- Specify title and content for each note
-- Automated ID generation for unique identification
-- Persistent storage on the Stellar blockchain
+- Premium payments are transferred from member's wallet directly to the contract using SAC
+- Approved claim payouts are sent automatically from the contract to the claimant's wallet
+- Compatible with native XLM and any Stellar-issued asset (USDC, EURC, etc.)
+- No manual intervention required — the contract handles all fund movements
 
-### 2. **Efficient Data Retrieval**
+### 2. **Community-Governed Claim Voting**
 
-- Fetch all stored notes in a single call
-- Structured data representation for easy frontend integration
-- Quick access to your entire note collection
-- Real-time synchronization with the blockchain state
+- Every claim is put to a vote among all pool members
+- Members cast approve or reject votes within the allowed time window
+- Majority vote (>50%) determines the outcome with no administrator override
+- Transparent vote counts stored on-chain and readable by anyone
 
-### 3. **Secure Deletion**
+### 3. **Time-Bound Voting with Ledger Timestamps**
 
-- Remove specific notes using their unique IDs
-- Permanent removal from the contract storage
-- Clean and efficient storage management
-- Immediate update of the note list after deletion
+- Each claim is assigned a voting deadline computed from `env.ledger().timestamp()`
+- No votes are accepted after the deadline — enforced at the contract level
+- Claims cannot be executed while voting is still active
+- Voting period duration is configurable at contract initialization
 
-### 4. **Transparency and Security**
+### 4. **Quorum & Conflict-of-Interest Protection**
 
-- View all note activities on the blockchain
-- Blockchain-based verification of all storage actions
-- Immutable records of note creation and deletion
-- Protected against unauthorized modifications
+- A minimum of 50% of eligible pool members must vote before a claim can be executed
+- Claimants are automatically blocked from voting on their own claim (self-vote prevention)
+- These rules are hardcoded into the contract and cannot be bypassed by anyone, including the admin
 
-### 5. **Stellar Network Integration**
+### 5. **On-Chain Reputation System**
 
-- Leverages the high speed and low cost of Stellar
-- Built using the modern Soroban Smart Contract SDK
-- Scalable architecture for growing note collections
-- Interoperable with other Stellar-based services
+- Every member starts with a reputation score of 100 points
+- Approved claims reward the claimant with +5 reputation points
+- Rejected claims penalize the claimant with −10 reputation points
+- Reputation is stored persistently on-chain and queryable at any time
+
+### 6. **Gas-Optimized Storage Architecture**
+
+- All data stored using Soroban `persistent()` storage for maximum data longevity
+- TTL (Time-to-Live) extensions applied on every write to prevent data expiry
+- DataKey caching pattern eliminates redundant `clone()` operations per function call
+- Pool balance read once per transaction and reused across conditional branches
+
+---
 
 ## Contract Details
 
-- Contract Address: CBLU4IUASQ4WUMOXBFLZRSBBLILGOH33GS4LUPKFBCCCMJCDQNMF7G2M
-  ![alt text](screenshot.png)
+- **Contract Address (Testnet):** `[Deploy and update this field]`
+- **Network:** Stellar Testnet
+- **SDK Version:** Soroban SDK v25
+- **RPC Endpoint:** `https://soroban-testnet.stellar.org:443`
+
+> After deployment, verify your contract on [Stellar Expert](https://stellar.expert/explorer/testnet).
+
+---
 
 ## Future Scope
 
 ### Short-Term Enhancements
 
-1. **Note Encryption**: Support for end-to-end encryption of note content for enhanced privacy
-2. **Category Management**: Add tags and categories to organize notes efficiently
-3. **Rich Text Support**: Extend support beyond plain text to include Markdown and formatted content
-4. **Search Functionality**: Implement advanced search filters for large note collections
+1. **Staking-Based Governance Weight**: Allow members who stake more tokens to have proportionally greater voting weight, incentivizing higher premiums
+2. **Partial Payouts**: Support for partial claim approvals where the community votes on a payout percentage rather than a binary approve/reject
+3. **Appeal Mechanism**: Allow claimants to appeal rejected claims within a secondary review period with a higher quorum requirement
+4. **Claim Category Tags**: Add structured categories (medical, property, casualty) to claims for easier filtering and analytics
 
 ### Medium-Term Development
 
-5. **Collaborative Notes**: Implement multi-signature requirements for shared or collaborative note-taking
-   - Shared access for multiple addresses
-   - Permission-based editing and viewing
-   - Version history tracking
-6. **Notification System**: Off-chain bridge to alert users of new updates or shared notes
-7. **Asset Attachment**: Capability to attach digital assets or tokens to specific notes
-8. **Inter-Contract Integration**: Allow other smart contracts to interact with and store data in the notes contract
+5. **Multi-Pool Architecture**: Support multiple isolated insurance pools with different token types, premium structures, and governance rules
+   - Each pool configured independently at initialization
+   - Cross-pool reputation portability
+   - Pool-specific voting periods and quorum thresholds
+6. **Automated Premium Collection**: Recurring premium contributions enforced via time-based ledger triggers
+7. **Risk Scoring Engine**: On-chain algorithm that adjusts premiums dynamically based on member reputation and claim history
+8. **Inter-Contract Integration**: Allow external Soroban contracts to query pool membership and reputation scores
 
 ### Long-Term Vision
 
-9. **Cross-Chain Synchronization**: Extend note storage to multiple blockchain networks
-10. **Decentralized UI Hosting**: Host the frontend on IPFS or similar decentralized platforms
-11. **AI-Powered Summarization**: Optional integration with AI to help users summarize their notes
-12. **Privacy Layers**: Implement zero-knowledge proofs for completely private note content
-13. **DAO Governance**: Community-driven protocol improvements and feature prioritization
-14. **Identity Management**: Integration with decentralized identity (DID) systems for user management
+9. **DAO Governance Upgrade**: Transition contract parameters (quorum, voting period, reputation weights) to a fully decentralized DAO vote
+10. **Cross-Chain Bridges**: Expand pool participation to members on other blockchains via cross-chain messaging protocols
+11. **Decentralized Frontend Hosting**: Deploy the web interface to IPFS or Arweave for a fully decentralized user experience
+12. **Privacy-Preserving Votes**: Implement zero-knowledge proof voting so vote choices are hidden until the deadline expires, preventing herd behavior
+13. **AI-Assisted Fraud Detection**: Off-chain oracle integration that flags statistically anomalous claims for higher community scrutiny
+14. **Decentralized Identity (DID) Integration**: Bind pool membership to verifiable credentials to prevent Sybil attacks
 
-### Enterprise Features
+### Enterprise & Social Impact
 
-15. **Corporate Documentation**: Adapt the system for secure corporate record-keeping
-16. **Immutable Logging**: Create time-locked logs for audit purposes
-17. **Automated Reporting**: Automatic note triggers for periodic reporting
-18. **Multi-Language Support**: Expand accessibility with internationalization
+15. **Parametric Insurance Triggers**: Automate claim approval based on oracle data (e.g., weather data for crop insurance)
+16. **NGO & Microfinance Partnerships**: White-label pool deployment for humanitarian organizations and microfinance institutions
+17. **Regulatory Compliance Module**: Optional KYC/AML layer via privacy-respecting on-chain identity attestation
+18. **Multi-Language Frontend**: Localize the interface for communities in Southeast Asia, Africa, and Latin America
 
 ---
 
 ## Technical Requirements
 
-- Soroban SDK
-- Rust programming language
-- Stellar blockchain network
+- Rust programming language (latest stable)
+- Soroban SDK v25
+- Stellar CLI (`stellar-cli`)
+- `wasm32-unknown-unknown` compilation target
+- Stellar Testnet RPC access
 
 ## Getting Started
 
-Deploy the smart contract to Stellar's Soroban network and interact with it using the three main functions:
+```bash
+# Install Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+rustup target add wasm32-unknown-unknown
 
-- `create_note()` - Create a new note with a title and content
-- `get_notes()` - Retrieve all stored notes from the contract
-- `delete_note()` - Remove a specific note by its ID
+# Install Stellar CLI
+cargo install --locked stellar-cli --features opt
+
+# Run tests
+cargo test -p micro-insurance-pool
+
+# Build WASM
+cargo build --target wasm32-unknown-unknown --release -p micro-insurance-pool
+```
+
+Deploy the smart contract to Stellar's Soroban network and interact with it using the five main functions:
+
+- `initialize()` — One-time setup: configure token and voting rules
+- `join_pool()` — Join as a member and pay your premium
+- `file_claim()` — Submit a claim for community review
+- `vote_claim()` — Vote to approve or reject a pending claim
+- `execute_claim()` — Finalize a claim after the voting window closes
+
+For the full deploy guide, see [`contracts/micro_insurance_pool/README.md`](./contracts/micro_insurance_pool/README.md).
 
 ---
 
-**Stellar Notes DApp** - Securing Your Thoughts on the Blockchain
+**MicroInsurancePool** — Trustless Insurance, Powered by Community 🛡️
