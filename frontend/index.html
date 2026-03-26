@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MicroInsurancePool — Decentralized Insurance on Stellar</title>
-    <meta name="description" content="A decentralized micro-insurance pool on Stellar blockchain. Join, file claims, vote, and receive payouts — all governed by smart contracts.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="description"
+        content="A decentralized micro-insurance pool on Stellar blockchain. Join, file claims, vote, and receive payouts — all governed by smart contracts.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --bg-primary: #0a0b14;
@@ -29,7 +32,11 @@
             --gradient-3: linear-gradient(135deg, #fd79a8, #e84393);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -43,8 +50,10 @@
         body::before {
             content: '';
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background:
                 radial-gradient(circle at 20% 20%, rgba(108, 92, 231, 0.08) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(0, 206, 201, 0.06) 0%, transparent 50%),
@@ -116,8 +125,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
         }
 
         /* Hero */
@@ -180,10 +196,21 @@
             margin-bottom: 4px;
         }
 
-        .stat-value.accent { color: var(--accent-light); }
-        .stat-value.success { color: var(--success); }
-        .stat-value.danger { color: var(--danger); }
-        .stat-value.warning { color: var(--warning); }
+        .stat-value.accent {
+            color: var(--accent-light);
+        }
+
+        .stat-value.success {
+            color: var(--success);
+        }
+
+        .stat-value.danger {
+            color: var(--danger);
+        }
+
+        .stat-value.warning {
+            color: var(--warning);
+        }
 
         .stat-label {
             color: var(--text-muted);
@@ -235,10 +262,21 @@
             font-size: 22px;
         }
 
-        .card-icon.join { background: rgba(108, 92, 231, 0.15); }
-        .card-icon.claim { background: rgba(253, 121, 168, 0.15); }
-        .card-icon.vote { background: rgba(0, 206, 201, 0.15); }
-        .card-icon.execute { background: rgba(254, 202, 87, 0.15); }
+        .card-icon.join {
+            background: rgba(108, 92, 231, 0.15);
+        }
+
+        .card-icon.claim {
+            background: rgba(253, 121, 168, 0.15);
+        }
+
+        .card-icon.vote {
+            background: rgba(0, 206, 201, 0.15);
+        }
+
+        .card-icon.execute {
+            background: rgba(254, 202, 87, 0.15);
+        }
 
         .card-title {
             font-size: 18px;
@@ -264,7 +302,9 @@
             margin-bottom: 6px;
         }
 
-        .form-group input, .form-group textarea, .form-group select {
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 12px 16px;
             border-radius: 12px;
@@ -277,7 +317,8 @@
             outline: none;
         }
 
-        .form-group input:focus, .form-group textarea:focus {
+        .form-group input:focus,
+        .form-group textarea:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
@@ -513,12 +554,22 @@
         }
 
         @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         @keyframes fadeOut {
-            to { opacity: 0; transform: translateY(-10px); }
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
         }
 
         /* Footer */
@@ -539,15 +590,35 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .header { padding: 16px 20px; }
-            .hero { padding: 40px 20px 20px; }
-            .hero h1 { font-size: 32px; }
-            .stats-row { grid-template-columns: repeat(2, 1fr); padding: 0 20px 20px; }
-            .main-grid { grid-template-columns: 1fr; padding: 0 20px 40px; }
-            .claims-section { padding: 0 20px 40px; }
+            .header {
+                padding: 16px 20px;
+            }
+
+            .hero {
+                padding: 40px 20px 20px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 0 20px 20px;
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+                padding: 0 20px 40px;
+            }
+
+            .claims-section {
+                padding: 0 20px 40px;
+            }
         }
     </style>
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -561,7 +632,8 @@
     <!-- Hero -->
     <section class="hero">
         <h1>Decentralized Insurance Pool</h1>
-        <p>Pay small premiums, vote on claims, receive payouts — all governed by Soroban smart contracts on Stellar. No middleman, no company.</p>
+        <p>Pay small premiums, vote on claims, receive payouts — all governed by Soroban smart contracts on Stellar. No
+            middleman, no company.</p>
     </section>
 
     <!-- Stats -->
@@ -677,7 +749,8 @@
             <button class="btn btn-primary" onclick="executeClaim()" style="margin-top: 8px;">
                 ⚡ Execute Claim
             </button>
-            <div style="margin-top: 16px; padding: 16px; border-radius: 12px; background: var(--bg-secondary); border: 1px solid var(--border);">
+            <div
+                style="margin-top: 16px; padding: 16px; border-radius: 12px; background: var(--bg-secondary); border: 1px solid var(--border);">
                 <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">GOVERNANCE RULES</div>
                 <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
                     • Voting deadline must pass before execution<br>
@@ -775,7 +848,7 @@
         // For production, connect via @stellar/stellar-sdk and Freighter wallet.
         //
         // Contract ID: Replace with your deployed contract ID
-        const CONTRACT_ID = 'YOUR_CONTRACT_ID_HERE';
+        const CONTRACT_ID = 'CBZFQSGKNCAIMN4NC3EZOMEVG2C4L7XMLNO2DUOH63QA4IU2EY6ULI6A';
         const NETWORK = 'TESTNET';
         const RPC_URL = 'https://soroban-testnet.stellar.org:443';
 
@@ -904,4 +977,5 @@
         });
     </script>
 </body>
+
 </html>
