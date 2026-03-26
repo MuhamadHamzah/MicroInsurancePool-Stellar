@@ -2,10 +2,10 @@
 
 **MicroInsurancePool** - Decentralized Community-Governed Insurance on Stellar Blockchain
 
-![Stellar](https://img.shields.io/static/v1?label=Built+on&message=Stellar&color=7B68EE&style=flat-square)
-![Soroban](https://img.shields.io/static/v1?label=Soroban&message=SDK+v25&color=00CEC9&style=flat-square)
-![Rust](https://img.shields.io/static/v1?label=Language&message=Rust&color=orange&style=flat-square)
-![License](https://img.shields.io/static/v1?label=License&message=MIT&color=green&style=flat-square)
+![Stellar](https://badgen.net/badge/Built%20on/Stellar/purple)
+![Soroban](https://badgen.net/badge/Soroban/SDK%20v25/cyan)
+![Rust](https://badgen.net/badge/Language/Rust/orange)
+![License](https://badgen.net/badge/License/MIT/green)
 
 ---
 
