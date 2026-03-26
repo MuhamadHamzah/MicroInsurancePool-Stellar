@@ -80,12 +80,16 @@ We envision a future where communities worldwide can form their own insurance po
 
 ## Contract Details
 
-- **Contract Address (Testnet):** `[Deploy and update this field]`
+- **Contract Address (Testnet):** `CBZF...` *(click the contract on Stellar Expert to get the full address)*
+- **Deploy Transaction:** [`42696e58...fa2d7ed34`](https://stellar.expert/explorer/testnet/tx/42696e580b9eeb33ccb1b2a8a0c313dbf5bc12c16bf75c366962663fa2d7ed34)
+- **Ledger:** `1707513` · **Processed:** `2026-03-26 15:40:05 UTC`
 - **Network:** Stellar Testnet
 - **SDK Version:** Soroban SDK v25
 - **RPC Endpoint:** `https://soroban-testnet.stellar.org:443`
 
-> After deployment, verify your contract on [Stellar Expert](https://stellar.expert/explorer/testnet).
+![Contract Deployment on Stellar Testnet](screenshot.png)
+
+> 🔍 Verify on [Stellar Expert Testnet](https://stellar.expert/explorer/testnet/tx/42696e580b9eeb33ccb1b2a8a0c313dbf5bc12c16bf75c366962663fa2d7ed34)
 
 ---
 
